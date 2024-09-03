@@ -1,8 +1,12 @@
 # example netlify.toml
 [build]
-  command = "# no build command"
-  functions = "netlify/functions"
-  publish = ""
+  publish = "frontend/public"
+  command = "# your build command if any"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
 
   ## Uncomment to use this redirect for Single Page Applications like create-react-app.
   ## Not needed for static site generators.
