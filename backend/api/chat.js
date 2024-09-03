@@ -1,35 +1,43 @@
-const { Configuration, OpenAIApi } = require("openai");
+const { corsOptions, axios } = require('../backend/server');
+const cors = require('cors')(corsOptions);
 
-const configuration = new Configuration({
-  apiKey: process.env.OPENAI_API_KEY,
-});
-const openai = new OpenAIApi(configuration);
+module.exports = (req, res) => {
+  return cors(req, res, async () => {
+    if (req.method === 'POST') {
+      try {
+        const userMessage = req.body.message;
+        
+        console.log('Received message:', userMessage);
 
-module.exports = async (req, res) => {
-  if (req.method === 'POST') {
-    const userMessage = req.body.message;
+        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
+          model: "gpt-3.5-turbo",
+          messages: [
+            {
+              role: "system", 
+              content: "You are Neighbor, a friendly and empathetic tech support assistant. Provide helpful, affirming, and extremely clear explanations for tech-related questions. Use simple language and break down complex tasks into easy-to-follow steps. Always be patient and encouraging."
+            },
+            {
+              role: "user", 
+              content: userMessage
+            }
+          ],
+          max_tokens: 300
+        }, {
+          headers: {
+            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
+            'Content-Type': 'application/json'
+          }
+        });
 
-    try {
-      const completion = await openai.createChatCompletion({
-        model: "gpt-3.5-turbo",
-        messages: [
-          { role: "user", content: userMessage }
-        ],
-      });
+        console.log('OpenAI API response:', response.data);
 
-      res.status(200).json({
-        success: true,
-        message: completion.data.choices[0].message.content,
-      });
-    } catch (error) {
-      console.error("Error calling OpenAI API:", error);
-      res.status(500).json({
-        success: false,
-        error: "Failed to get AI response"
-      });
+        res.json({ message: response.data.choices[0].message.content });
+      } catch (error) {
+        console.error('OpenAI API Error:', error.response ? error.response.data : error.message);
+        res.status(500).json({ error: 'An error occurred while processing your request.' });
+      }
+    } else {
+      res.status(405).json({ error: 'Method not allowed' });
     }
-  } else {
-    res.setHeader('Allow', ['POST']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
-  }
+  });
 };
