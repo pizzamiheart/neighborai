@@ -4,16 +4,22 @@ const cors = require('cors');
 
 dotenv.config();
 
-// Keep CORS configuration for use in serverless functions
 const corsOptions = {
   origin: 'https://loquacious-stroopwafel-80e0ed.netlify.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
 
-// Export CORS options and any other shared configurations or utilities
+// Export shared utilities and configurations
 module.exports = {
-  corsOptions,
   axios,
-  // Add any other shared utilities or configurations here
+  cors: cors(corsOptions),
+  OPENAI_API_KEY: process.env.OPENAI_API_KEY,
+  BLAND_API_KEY: process.env.BLAND_API_KEY,
+  BLAND_PATHWAY_ID: process.env.BLAND_PATHWAY_ID
 };
+
+// Log environment variable status
+console.log('OpenAI API Key loaded:', process.env.OPENAI_API_KEY ? 'Yes' : 'No');
+console.log('BlandAI API Key loaded:', process.env.BLAND_API_KEY ? 'Yes' : 'No');
+console.log('BlandAI Pathway ID:', process.env.BLAND_PATHWAY_ID || 'Not available');
