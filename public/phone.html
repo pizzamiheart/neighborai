@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neighbor - Call Your Tech Assistant</title>
+    <style>
+        /* Your existing styles remain unchanged */
+        body {
+            font-family: Arial, sans-serif;
+            font-size: 20px;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f2f5;
+            text-align: center;
+        }
+        h1 {
+            color: #4267B2;
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+        h2 {
+            color: #4267B2;
+            font-size: 24px;
+            font-weight: normal;
+            margin-top: 10px;
+        }
+        .phone-container {
+            margin: 30px 0;
+            position: relative;
+            width: 200px;
+            height: 200px;
+        }
+        #phone-emoji {
+            font-size: 120px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+        #call-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+        .phone-container:hover #phone-emoji {
+            transform: scale(0.8);
+        }
+        .phone-container:hover #call-button {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+        }
+        .explanation-box {
+            background-color: white;
+            border: 2px solid #4267B2;
+            border-radius: 8px;
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        /* New styles for phone number input and status message */
+        #phoneNumber {
+            margin-top: 20px;
+            padding: 10px;
+            font-size: 16px;
+            width: 200px;
+        }
+        #status {
+            margin-top: 20px;
+            font-weight: bold;
+            color: #4267B2;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <ul style="list-style-type: none; padding: 0; display: flex; justify-content: center; gap: 20px;">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="chatbot.html">Chat with AI</a></li>
+                <li><a href="phone.html">Speak Live</a></li>
+            </ul>
+        </nav>
+    </header>
+    <h1>Neighbor</h1>
+    <h2>Call Your Tech Assistant</h2>
+    <p>Enter your phone number and click the phone to start a call</p>
+    <input type="tel" id="phoneNumber" placeholder="Enter your phone number" required>
+    <div class="phone-container">
+        <div id="phone-emoji">📞</div>
+        <button id="call-button">Call Your Neighbor</button>
+    </div>
+    <p id="status"></p>
+    <div class="explanation-box">
+        <p>
+            Get live help with your tech issues from an infinitely patient and always-around assistant! 
+            We can help with things like resetting your Wi-Fi, speeding up your computer, 
+            updating your smartphone, and managing cloud storage.
+        </p>
+    </div>
+    <script>
+        // Remove Firebase initialization code
+
+        async function handleCall() {
+            const phoneNumber = document.getElementById('phoneNumber').value;
+            if (!phoneNumber) {
+                document.getElementById('status').textContent = 'Please enter a phone number.';
+                return;
+            }
+            
+            document.getElementById('status').textContent = 'Initiating call...';
+            
+            try {
+                const response = await fetch('https://neighborai-hhtzvabtzv.vercel.app/api/initiate-call', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ phoneNumber: phoneNumber }),
+                });
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('status').textContent = 'Call initiated successfully! You should receive a call shortly.';
+                } else {
+                    throw new Error(result.error);
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('status').textContent = 'An error occurred. Please try again.';
+            }
+        }
+
+        document.getElementById('call-button').addEventListener('click', handleCall);
+        document.getElementById('phone-emoji').addEventListener('click', handleCall);
+    </script>
+</body>
+</html>
