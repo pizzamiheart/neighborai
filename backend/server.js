@@ -7,7 +7,8 @@ dotenv.config();
 const corsOptions = {
   origin: 'https://loquacious-stroopwafel-80e0ed.netlify.app',
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
 };
 
 // Export shared utilities and configurations
