@@ -1,8 +1,7 @@
-const { corsOptions, axios } = require('../backend/server');
-const cors = require('cors')(corsOptions);
+const { axios, cors, OPENAI_API_KEY } = require('../backend/server');
 
 module.exports = (req, res) => {
-  return cors(req, res, async () => {
+  cors(req, res, async () => {
     if (req.method === 'POST') {
       try {
         const userMessage = req.body.message;
