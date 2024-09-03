@@ -178,8 +178,9 @@
     <script>
         async function fetchResponse(message) {
             try {
-                const response = await fetch('https://neighborai-hhtzvabtzv.vercel.app/api/chat', {
+                const response = await fetch('https://neighborai.vercel.app/', {
                     method: 'POST',
+                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
                     },

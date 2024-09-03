@@ -58,23 +58,6 @@
         <button class="choice-button" id="chatbot-button">Chat with AI</button>
         <button class="choice-button" id="phone-button">Speak Live</button>
     </div>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
-        import { getFunctions, httpsCallable } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-functions.js";
-
-        const firebaseConfig = {
-            authDomain: "neighbor-ai.firebaseapp.com",
-            projectId: "neighbor-ai",
-            storageBucket: "neighbor-ai.appspot.com",
-            messagingSenderId: "268775924254",
-            appId: "1:268775924254:web:5add5cb0328caf4d99840f"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const functions = getFunctions(app);
-
-        // Your function calls here
-    </script>
     <script>
         document.getElementById('chatbot-button').addEventListener('click', () => {
             window.location.href = '/chatbot.html';

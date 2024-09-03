@@ -1,4 +1,12 @@
 const { app, axios } = require('../backend/server');
+const cors = require('cors');
+
+const corsHandler = cors({
+  origin: 'https://loquacious-stroopwafel-80e0ed.netlify.app', // Your Netlify domain
+  methods: ['GET', 'POST', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization'],
+  credentials: true
+});
 
 app.post('/api/initiate-call', async (req, res) => {
   if (!process.env.BLAND_API_KEY) {
@@ -61,4 +69,17 @@ app.post('/api/initiate-call', async (req, res) => {
   }
 });
 
-module.exports = app;
+module.exports = (req, res) => {
+  return corsHandler(req, res, async () => {
+    if (req.method === 'OPTIONS') {
+      return res.status(200).end();
+    }
+    
+    if (req.method === 'POST') {
+      // Your existing logic here
+    } else {
+      res.setHeader('Allow', ['POST', 'OPTIONS']);
+      res.status(405).end('Method Not Allowed');
+    }
+  });
+};
