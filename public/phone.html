@@ -127,7 +127,7 @@
             document.getElementById('status').textContent = 'Initiating call...';
             
             try {
-                const response = await fetch('/api/initiate-call', {
+                const response = await fetch('/backend/api/initiate-call', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

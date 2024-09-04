@@ -3,7 +3,6 @@ const axios = require('axios');
 
 dotenv.config();
 
-// Export shared utilities and configurations
 module.exports = {
   axios,
   OPENAI_API_KEY: process.env.OPENAI_API_KEY,
