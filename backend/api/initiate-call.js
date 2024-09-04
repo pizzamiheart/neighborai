@@ -1,5 +1,7 @@
 const { axios, BLAND_API_KEY, BLAND_PATHWAY_ID } = require('./_utils/config');
 
+console.log('API endpoint hit:', new Date().toISOString());
+
 const handler = async (req, res) => {
   if (req.method === 'POST') {
     if (!BLAND_API_KEY) {

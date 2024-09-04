@@ -180,12 +180,16 @@
             try {
                 const response = await fetch('/api/chat', {
                     method: 'POST',
-                    credentials: 'include',
                     headers: {
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({ message: message }),
                 });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
                 const result = await response.json();
                 if (result.success) {
                     removeTypingIndicator();
@@ -195,7 +199,8 @@
                     throw new Error(result.error);
                 }
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error details:', error);
+                console.error('Response text:', await response.text());
                 removeTypingIndicator();
                 addMessageToChat('Neighbor', 'Sorry, I encountered an error. Please try again.');
             }

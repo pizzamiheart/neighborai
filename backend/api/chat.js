@@ -1,9 +1,11 @@
-const { axios, OPENAI_API_KEY } = require('./_utils/config');
-const OpenAI = require('openai');
+const { OpenAI } = require('openai');
+const { OPENAI_API_KEY } = require('./_utils/config');
 
-const openai = new OpenAI(OPENAI_API_KEY);
+const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
-const handler = async (req, res) => {
+module.exports = async (req, res) => {
+  console.log('API endpoint hit:', new Date().toISOString());
+  
   if (req.method === 'POST') {
     try {
       const { message } = req.body;
@@ -13,9 +15,7 @@ const handler = async (req, res) => {
         model: "gpt-3.5-turbo",
       });
       
-      const response = completion.choices[0].message.content;
-      
-      res.status(200).json({ success: true, message: response });
+      res.status(200).json({ success: true, message: completion.choices[0].message.content });
     } catch (error) {
       console.error('Chat processing error:', error);
       res.status(500).json({ success: false, error: 'Failed to process chat' });
@@ -24,5 +24,3 @@ const handler = async (req, res) => {
     res.status(405).json({ error: 'Method Not Allowed' });
   }
 };
-
-module.exports = handler;
