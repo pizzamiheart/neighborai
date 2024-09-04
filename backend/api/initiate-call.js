@@ -1,30 +1,19 @@
-const { app, axios } = require('../backend/server');
-
-const allowCors = fn => async (req, res) => {
-  res.setHeader('Access-Control-Allow-Credentials', true)
-  res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
-  res.setHeader(
-    'Access-Control-Allow-Headers',
-    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
-  )
-  if (req.method === 'OPTIONS') {
-    res.status(200).end()
-    return
-  }
-  return await fn(req, res)
-}
+const { axios, BLAND_API_KEY, BLAND_PATHWAY_ID } = require('./_utils/config');
 
 const handler = async (req, res) => {
-  if (!process.env.BLAND_API_KEY) {
+  if (req.method !== 'POST') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
+  }
+
+  if (!BLAND_API_KEY) {
     return res.status(500).json({ success: false, error: 'BlandAI configuration is missing' });
   }
 
   console.log('Attempting to initiate call via BlandAI API...');
-  console.log('BlandAI API Key being used (first 10 chars):', process.env.BLAND_API_KEY.substring(0, 10) + '...');
+  console.log('BlandAI API Key being used (first 10 chars):', BLAND_API_KEY.substring(0, 10) + '...');
 
   const headers = {
-    'Authorization': `Bearer ${process.env.BLAND_API_KEY}`,
+    'Authorization': `Bearer ${BLAND_API_KEY}`,
     'Content-Type': 'application/json'
   };
 
@@ -36,7 +25,7 @@ const handler = async (req, res) => {
     "language": "en",
     "voice": "nat",
     "voice_settings": {},
-    "pathway_id": process.env.BLAND_PATHWAY_ID,
+    "pathway_id": BLAND_PATHWAY_ID,
     "local_dialing": false,
     "max_duration": 12,
     "answered_by_enabled": false,
@@ -74,6 +63,6 @@ const handler = async (req, res) => {
     console.error('BlandAI API Error:', error.response ? error.response.data : error.message);
     res.status(500).json({ success: false, error: 'Failed to initiate call', details: error.message });
   }
-}
+};
 
-module.exports = allowCors(handler)
+module.exports = handler;

@@ -127,7 +127,7 @@
             document.getElementById('status').textContent = 'Initiating call...';
             
             try {
-                const response = await fetch('https://neighborai-kbi84ys3h-andrews-projects-2fa20d90.vercel.app/api/initiate-call', {
+                const response = await fetch('/api/initiate-call', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
