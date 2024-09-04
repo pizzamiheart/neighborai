@@ -1,14 +1,21 @@
 const { app, axios } = require('../backend/server');
-const cors = require('cors');
 
-const corsHandler = cors({
-  origin: 'https://loquacious-stroopwafel-80e0ed.netlify.app', // Your Netlify domain
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-});
+const allowCors = fn => async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', 'https://loquacious-stroopwafel-80e0ed.netlify.app')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  return await fn(req, res)
+}
 
-app.post('/api/initiate-call', async (req, res) => {
+const handler = async (req, res) => {
   if (!process.env.BLAND_API_KEY) {
     return res.status(500).json({ success: false, error: 'BlandAI configuration is missing' });
   }
@@ -67,19 +74,6 @@ app.post('/api/initiate-call', async (req, res) => {
     console.error('BlandAI API Error:', error.response ? error.response.data : error.message);
     res.status(500).json({ success: false, error: 'Failed to initiate call', details: error.message });
   }
-});
+}
 
-module.exports = (req, res) => {
-  return corsHandler(req, res, async () => {
-    if (req.method === 'OPTIONS') {
-      return res.status(200).end();
-    }
-    
-    if (req.method === 'POST') {
-      // Your existing logic here
-    } else {
-      res.setHeader('Allow', ['POST', 'OPTIONS']);
-      res.status(405).end('Method Not Allowed');
-    }
-  });
-};
+module.exports = allowCors(handler)

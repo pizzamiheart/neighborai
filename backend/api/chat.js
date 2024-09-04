@@ -1,54 +1,27 @@
-const cors = require('cors');
+const allowCors = fn => async (req, res) => {
+  res.setHeader('Access-Control-Allow-Credentials', true)
+  res.setHeader('Access-Control-Allow-Origin', 'https://loquacious-stroopwafel-80e0ed.netlify.app')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  if (req.method === 'OPTIONS') {
+    res.status(200).end()
+    return
+  }
+  return await fn(req, res)
+}
 
-const corsHandler = cors({
-  origin: 'https://loquacious-stroopwafel-80e0ed.netlify.app', // Your Netlify domain
-  methods: ['GET', 'POST', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization'],
-  credentials: true
-});
+const handler = async (req, res) => {
+  // Your existing API logic here
+  // For example:
+  if (req.method === 'POST') {
+    // Process the chat or call initiation
+    // ...
+  } else {
+    res.status(405).end('Method Not Allowed')
+  }
+}
 
-module.exports = (req, res) => {
-  return corsHandler(req, res, async () => {
-    if (req.method === 'OPTIONS') {
-      return res.status(200).end();
-    }
-    
-    if (req.method === 'POST') {
-      try {
-        const userMessage = req.body.message;
-        
-        console.log('Received message:', userMessage);
-
-        const response = await axios.post('https://api.openai.com/v1/chat/completions', {
-          model: "gpt-3.5-turbo",
-          messages: [
-            {
-              role: "system", 
-              content: "You are Neighbor, a friendly and empathetic tech support assistant. Provide helpful, affirming, and extremely clear explanations for tech-related questions. Use simple language and break down complex tasks into easy-to-follow steps. Always be patient and encouraging."
-            },
-            {
-              role: "user", 
-              content: userMessage
-            }
-          ],
-          max_tokens: 300
-        }, {
-          headers: {
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-            'Content-Type': 'application/json'
-          }
-        });
-
-        console.log('OpenAI API response:', response.data);
-
-        res.json({ message: response.data.choices[0].message.content });
-      } catch (error) {
-        console.error('OpenAI API Error:', error.response ? error.response.data : error.message);
-        res.status(500).json({ error: 'An error occurred while processing your request.' });
-      }
-    } else {
-      res.setHeader('Allow', ['POST', 'OPTIONS']);
-      res.status(405).end('Method Not Allowed');
-    }
-  });
-};
+module.exports = allowCors(handler)
