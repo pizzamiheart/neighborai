@@ -1,4 +1,4 @@
-const { axios, BLAND_API_KEY, BLAND_PATHWAY_ID } = require('./_utils/config');
+const { axios, BLAND_API_KEY, BLAND_PATHWAY_ID } = require('../_utils/config');
 
 console.log('API endpoint hit:', new Date().toISOString());
 
