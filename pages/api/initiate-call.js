@@ -1,8 +1,8 @@
-const { axios, BLAND_API_KEY, BLAND_PATHWAY_ID } = require('../_utils/config');
+const { axios, BLAND_API_KEY, BLAND_PATHWAY_ID } = require('../../utils/config');
 
-console.log('API endpoint hit:', new Date().toISOString());
+export default async function handler(req, res) {
+  console.log('API endpoint hit:', new Date().toISOString());
 
-const handler = async (req, res) => {
   if (req.method === 'POST') {
     if (!BLAND_API_KEY) {
       return res.status(500).json({ success: false, error: 'BlandAI configuration is missing' });
@@ -64,6 +64,4 @@ const handler = async (req, res) => {
   } else {
     res.status(405).json({ error: 'Method Not Allowed' });
   }
-};
-
-module.exports = handler;
+}

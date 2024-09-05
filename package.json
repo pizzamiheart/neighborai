@@ -1,12 +1,11 @@
 {
   "name": "neighbor",
   "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "description": "Your Friendy Tech Assistant",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node backend/api/server.js",
-    "dev": "node backend/api/server.js"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +14,13 @@
     "axios": "^1.7.7",
     "dotenv": "^16.4.5",
     "firebase": "^10.13.1",
-    "openai": "^4.57.0"
+    "next": "^12.0.0",
+    "openai": "^4.57.0",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
+  },
+  "devDependencies": {
+    "@types/react": "^17.0.38",
+    "typescript": "^4.5.4"
   }
 }

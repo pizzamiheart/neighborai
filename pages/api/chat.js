@@ -1,9 +1,9 @@
 const { OpenAI } = require('openai');
-const { OPENAI_API_KEY } = require('../_utils/config');
+const { OPENAI_API_KEY } = require('../../utils/config');
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
-module.exports = async (req, res) => {
+export default async function handler(req, res) {
   console.log('Chat API hit:', new Date().toISOString());
   
   if (req.method === 'POST') {
@@ -28,4 +28,4 @@ module.exports = async (req, res) => {
     console.log('Method not allowed:', req.method);
     res.status(405).json({ error: 'Method Not Allowed' });
   }
-};
+}
