@@ -1,6 +1,6 @@
 const { axios, BLAND_API_KEY, BLAND_PATHWAY_ID } = require('../../utils/config');
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   console.log('API endpoint hit:', new Date().toISOString());
 
   if (req.method === 'POST') {

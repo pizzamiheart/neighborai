@@ -3,7 +3,7 @@ const { OPENAI_API_KEY } = require('../../utils/config');
 
 const openai = new OpenAI({ apiKey: OPENAI_API_KEY });
 
-export default function handler(req, res) {
+export default async function handler(req, res) {
   console.log('Chat API hit:', new Date().toISOString());
   
   if (req.method === 'POST') {
